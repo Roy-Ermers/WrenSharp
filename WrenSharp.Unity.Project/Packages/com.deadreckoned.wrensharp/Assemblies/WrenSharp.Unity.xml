@@ -268,6 +268,11 @@
             </summary>
             <returns>A new <see cref="T:WrenSharp.WrenVMConfiguration"/> that is a shallow copy of this configuration.</returns>
         </member>
+        <member name="P:WrenSharp.WrenList.AsNativeList">
+            <summary>
+            Returns a <see cref="T:WrenSharp.Unsafe.WrenNativeList"/> wrapping this list.
+            </summary>
+        </member>
         <member name="M:WrenSharp.WrenList.Remove(System.Int32,System.Nullable{System.Int32})">
             <summary>
             Removes the value stored in <paramref name="index"/> from the list and places the removed value in slot[<paramref name="removedValueSlot"/>].
@@ -1021,6 +1026,21 @@
             Returns a <see cref="T:System.ReadOnlySpan`1"/> (with a generic type of <see cref="T:System.Byte"/>) value from the call's return slot.
             </summary>
             <returns>A <see cref="T:System.ReadOnlySpan`1"/> (with a generic type of <see cref="T:System.Byte"/>).</returns>
+        </member>
+        <member name="M:WrenSharp.WrenCall.GetReturnList(System.Nullable{System.Int32})">
+            <summary>
+            Returns a <see cref="T:WrenSharp.WrenList"/> value from the call's return slot.
+            </summary>
+            <param name="defaultElementSlot">The default slot to use for element operations on the <see cref="T:WrenSharp.WrenList"/>.</param>
+            <returns>A <see cref="T:WrenSharp.WrenList"/> value.</returns>
+        </member>
+        <member name="M:WrenSharp.WrenCall.GetReturnMap(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Returns a <see cref="T:WrenSharp.WrenMap"/> value from the call's return slot.
+            </summary>
+            <param name="defaultKeySlot">The default slot to use for key operations on the <see cref="T:WrenSharp.WrenMap"/>.</param>
+            <param name="defaultValueSlot">The default slot to use for value operations on the <see cref="T:WrenSharp.WrenMap"/>.</param>
+            <returns>A <see cref="T:WrenSharp.WrenMap"/> value.</returns>
         </member>
         <member name="M:WrenSharp.WrenCall.GetReturnForeign">
             <summary>

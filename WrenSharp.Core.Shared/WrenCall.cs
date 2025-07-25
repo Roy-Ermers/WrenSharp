@@ -368,6 +368,23 @@ namespace WrenSharp
         public ReadOnlySpan<byte> GetReturnStringBytes() => WrenInternal.GetSlotStringBytes(m_Vm.m_Ptr, 0);
 
         /// <summary>
+        /// Returns a <see cref="WrenList"/> value from the call's return slot.
+        /// </summary>
+        /// <param name="defaultElementSlot">The default slot to use for element operations on the <see cref="WrenList"/>.</param>
+        /// <returns>A <see cref="WrenList"/> value.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public WrenList GetReturnList(int? defaultElementSlot = null) => new WrenList(m_Vm, 0, defaultElementSlot);
+
+        /// <summary>
+        /// Returns a <see cref="WrenMap"/> value from the call's return slot.
+        /// </summary>
+        /// <param name="defaultKeySlot">The default slot to use for key operations on the <see cref="WrenMap"/>.</param>
+        /// <param name="defaultValueSlot">The default slot to use for value operations on the <see cref="WrenMap"/>.</param>
+        /// <returns>A <see cref="WrenMap"/> value.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public WrenMap GetReturnMap(int? defaultKeySlot = null, int? defaultValueSlot = null) => new WrenMap(m_Vm, 0, defaultKeySlot, defaultValueSlot);
+
+        /// <summary>
         /// Returns a foreign type <see cref="IntPtr"/> from the call's return slot.
         /// </summary>
         /// <returns>A <see cref="IntPtr"/> value.</returns>

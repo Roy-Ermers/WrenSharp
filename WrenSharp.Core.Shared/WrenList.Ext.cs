@@ -9,6 +9,9 @@ namespace WrenSharp
     {
         #region Properties
 
+        /// <summary>
+        /// Returns a <see cref="WrenNativeList"/> wrapping this list.
+        /// </summary>
         public unsafe WrenNativeList AsNativeList => Wren.GetSlotPtr(m_Vm.m_Ptr, m_ListSlot)->AsList;
 
         #endregion
@@ -28,21 +31,21 @@ namespace WrenSharp
 
         #region Unsafe
 
-        public void Add(Unsafe.WrenValue value, int? elementSlot = default)
+        public void Add(WrenValue value, int? elementSlot = default)
         {
             int slot = elementSlot.GetValueOrDefault(m_DefaultElementSlot);
             Wren.SetSlot(m_Vm.m_Ptr, slot, value);
             Wren.InsertInList(m_Vm.m_Ptr, m_ListSlot, -1, slot);
         }
 
-        public void Insert(Unsafe.WrenValue value, int index, int? elementSlot = default)
+        public void Insert(WrenValue value, int index, int? elementSlot = default)
         {
             int slot = elementSlot.GetValueOrDefault(m_DefaultElementSlot);
             Wren.SetSlot(m_Vm.m_Ptr, slot, value);
             Wren.InsertInList(m_Vm.m_Ptr, m_ListSlot, index, slot);
         }
 
-        public bool Remove(Unsafe.WrenValue value, int? removedValueSlot = default)
+        public bool Remove(WrenValue value, int? removedValueSlot = default)
         {
             int slot = removedValueSlot.GetValueOrDefault(m_DefaultElementSlot);
             Wren.SetSlot(m_Vm.m_Ptr, m_DefaultElementSlot, value);
@@ -56,7 +59,7 @@ namespace WrenSharp
             return false;
         }
 
-        public bool Remove(Unsafe.WrenValue value, ref WrenSlot removedValueSlot)
+        public bool Remove(WrenValue value, ref WrenSlot removedValueSlot)
         {
             Wren.SetSlot(m_Vm.m_Ptr, m_DefaultElementSlot, value);
             int index = Wren.GetListIndexOf(m_Vm.m_Ptr, m_ListSlot, m_DefaultElementSlot);
