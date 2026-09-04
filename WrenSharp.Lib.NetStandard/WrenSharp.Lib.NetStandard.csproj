@@ -6,6 +6,7 @@
     <Configurations>Debug;Release</Configurations>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>WrenSharp.Internal</RootNamespace>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,6 +19,9 @@
 
   <ItemGroup>
     <None Update="wren.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>    
+    <None Update="libwren.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="wren.exp">
