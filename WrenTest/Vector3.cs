@@ -37,7 +37,7 @@ public partial class Vector3
         return Math.Sqrt(X * Y * Z);
     }    
     [WrenMethod]
-    public string Print()
+    public override string ToString()
     {
         return $"({X}, {Y}, {Z})";
     }

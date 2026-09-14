@@ -81,6 +81,27 @@ public static class WrenTypeExtensions
         };
     }
 
+    public static string ToWrenType(WrenType type)
+    {
+        return type switch
+        {
+            WrenType.Bool => "bool",
+            WrenType.Number => "number",
+            WrenType.String => "string",
+            WrenType.Foreign => "foreign",
+            WrenType.List => "list",
+            WrenType.Map => "map",
+            WrenType.Null => "null",
+            WrenType.Unknown => "unknown",
+            _ => throw new NotImplementedException()
+        };
+    }
+
+    public static string CsharpToWrenString(string csharpType)
+    {
+        return ToWrenType(FromCsharpType(csharpType));
+    }
+
     public static string ToWrenGetArgMethod(string csharpType, int slot, string ctx = "ctx")
     {
         var method = csharpType switch

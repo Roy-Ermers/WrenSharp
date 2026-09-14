@@ -8,31 +8,30 @@ namespace WrenSharp.SourceGenerator;
     /// </summary>
     public sealed class IndentedStringBuilder
     {
-        private readonly StringBuilder _sb = new StringBuilder();
-        private readonly string _indentUnit;
-        private int _indentLevel;
-        private bool _atLineStart = true;
+        private readonly StringBuilder sb = new();
+        private readonly string indentUnit;
+        private int indentLevel;
+        private bool atLineStart = true;
  
         /// <param name="indentUnit">The string used for a single indent level. Defaults to 4 spaces.</param>
         public IndentedStringBuilder(string indentUnit = "    ")
         {
-            _indentUnit = indentUnit;
+            this.indentUnit = indentUnit;
         }
  
-        public int IndentLevel => _indentLevel;
+        public int IndentLevel => indentLevel;
  
         /// <summary>Increases the indent level by one.</summary>
-        public IndentedStringBuilder Indent()
+        public IndentedStringBuilder Indent(int level = 1)
         {
-            _indentLevel++;
+            indentLevel += level;
             return this;
         }
  
         /// <summary>Decreases the indent level by one (never below zero).</summary>
-        public IndentedStringBuilder Unindent()
-        {
-            if (_indentLevel > 0)
-                _indentLevel--;
+        public IndentedStringBuilder Unindent(int level = 1)
+        { 
+            indentLevel = Math.Max(indentLevel - level, 0);
             return this;
         }
  
@@ -48,29 +47,29 @@ namespace WrenSharp.SourceGenerator;
         /// sb.AppendLine("}");
         /// </code>
         /// </summary>
-        public IndentScope Indented() => new IndentScope(this);
+        public IndentScope Indented() => new(this);
  
         public IndentedStringBuilder Append(string text)
         {
             WriteIndentIfNeeded();
-            _sb.Append(text);
+            sb.Append(text);
             return this;
         }
  
         public IndentedStringBuilder Append(char c)
         {
             WriteIndentIfNeeded();
-            _sb.Append(c);
+            sb.Append(c);
             if (c == '\n')
-                _atLineStart = true;
+                atLineStart = true;
             return this;
         }
  
         /// <summary>Appends a blank line.</summary>
         public IndentedStringBuilder AppendLine()
         {
-            _sb.AppendLine();
-            _atLineStart = true;
+            sb.AppendLine();
+            atLineStart = true;
             return this;
         }
  
@@ -78,9 +77,9 @@ namespace WrenSharp.SourceGenerator;
         public IndentedStringBuilder AppendLine(string text)
         {
             WriteIndentIfNeeded();
-            _sb.Append(text);
-            _sb.AppendLine();
-            _atLineStart = true;
+            sb.Append(text);
+            sb.AppendLine();
+            atLineStart = true;
             return this;
         }
  
@@ -101,22 +100,22 @@ namespace WrenSharp.SourceGenerator;
  
         public IndentedStringBuilder Clear()
         {
-            _sb.Clear();
-            _indentLevel = 0;
-            _atLineStart = true;
+            sb.Clear();
+            indentLevel = 0;
+            atLineStart = true;
             return this;
         }
  
-        public override string ToString() => _sb.ToString();
+        public override string ToString() => sb.ToString();
  
         private void WriteIndentIfNeeded()
         {
-            if (_atLineStart && _indentLevel > 0)
+            if (atLineStart && indentLevel > 0)
             {
-                for (int i = 0; i < _indentLevel; i++)
-                    _sb.Append(_indentUnit);
+                for (int i = 0; i < indentLevel; i++)
+                    sb.Append(indentUnit);
             }
-            _atLineStart = false;
+            atLineStart = false;
         }
  
         /// <summary>
@@ -125,14 +124,14 @@ namespace WrenSharp.SourceGenerator;
         /// </summary>
         public readonly struct IndentScope : IDisposable
         {
-            private readonly IndentedStringBuilder _owner;
+            private readonly IndentedStringBuilder owner;
  
             internal IndentScope(IndentedStringBuilder owner)
             {
-                _owner = owner;
-                _owner.Indent();
+                this.owner = owner;
+                this.owner.Indent();
             }
  
-            public void Dispose() => _owner.Unindent();
+            public void Dispose() => owner.Unindent();
         }
     }

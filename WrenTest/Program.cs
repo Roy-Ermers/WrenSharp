@@ -1,45 +1,32 @@
 ﻿using WrenSharp;
 using WrenSharp.Interop;
+using WrenTest;
 
 
 var content = File.ReadAllText("./code.wren");
 
 var config = new WrenVMConfiguration()
 {
-    LogErrors = true,
-    ModuleProvider = new ModuleProvider()
+    LogErrors = false,
+    WriteOutput = new WrenConsoleOutput(),
+    ModuleProvider = new WrenBinding(),
 };
 
 
 using var vm = new WrenSharpVM(config);
-Binding.Bind(vm);
+WrenBinding.Bind(vm);
 
-vm.Interpret(
-    module: "main",
-    source: content, 
-    throwOnFailure: true
-    );
-
-
-class ModuleProvider : IWrenModuleProvider
+try
 {
-    public IWrenSource GetModuleSource(WrenVM vm, string module)
-    {
-        return new WrenStringSource("""
-                                    foreign class Vector3 {
-                                        construct new() {}
-                                        construct new(x,y,z) {}
-                                        foreign print()
-                                    }                                    
-                                    foreign class logger {
-                                        foreign static log(message)
-                                        foreign static error(message)
-                                    }
-                                    """);
-    }
-
-    public void OnModuleLoadComplete(WrenVM vm, string module, IWrenSource source)
-    {
-       
-    }
+    vm.Interpret(
+        module: "main",
+        source: content,
+        throwOnFailure: true
+    );
 }
+catch (Exception e)
+{
+    Console.Error.WriteLine(e);
+    throw;
+}
+

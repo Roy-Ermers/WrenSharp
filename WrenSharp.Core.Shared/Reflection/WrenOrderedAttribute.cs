@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WrenSharp.Reflection
+﻿namespace WrenSharp.Reflection
 {
     /// <summary>
     /// Abstract base class for attributes that require ordering.

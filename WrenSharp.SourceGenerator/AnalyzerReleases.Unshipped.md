@@ -5,8 +5,8 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-WREN001 | WrenSharp.Generators | Error | Diagnostics
-WREN002 | WrenSharp.Generators | Error | Diagnostics
-WREN003 | WrenSharp.Generators | Error | Diagnostics
+WREN001 | SourceGenerator | Error | Diagnostics
+WREN002 | SourceGenerator | Error | Diagnostics
+WREN003 | SourceGenerator | Error | Diagnostics
 WREN004 | WrenSharp.Generators | Error | Diagnostics
 WREN005 | WrenSharp.Generators | Error | Diagnostics

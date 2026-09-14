@@ -1,5 +1,4 @@
 ﻿using WrenSharp.Native;
-using System;
 
 namespace WrenSharp
 {

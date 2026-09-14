@@ -1,25 +1,31 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Security.Cryptography;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
-using WrenSharp.Generators;
-using WrenSharp.SourceGenerator.Attributes;
 using WrenSharp.SourceGenerator.Models;
 
 namespace WrenSharp.SourceGenerator;
 
-public partial class WrenInterop : IIncrementalGenerator
+public partial class WrenInterop
 {
     private static WrenClassModel Analyze(GeneratorAttributeSyntaxContext context)
     {
         if (context.TargetSymbol is not INamedTypeSymbol classSymbol)
         {
-            throw new Exception("WrenClass attribute needs to be attached to class.");
+            throw new("WrenClass attribute needs to be attached to class.");
         }
         
         var diagnostics = new List<Diagnostic>();
+
+        if (context.TargetNode is ClassDeclarationSyntax declaration && !declaration.Modifiers.Any(SyntaxKind.PartialKeyword))
+        {
+            diagnostics.Add(
+                Diagnostic.Create(
+                    Diagnostics.ClassMustBePartial,
+                    classSymbol.Locations.FirstOrDefault(), 
+                            classSymbol.Name
+                    ));
+        }
         
         // get first WrenClass attribute
         var attribute = classSymbol.GetAttributes()
@@ -37,7 +43,7 @@ public partial class WrenInterop : IIncrementalGenerator
         if (!classSymbol.ContainingNamespace.IsGlobalNamespace)
             ns = classSymbol.ContainingNamespace.ToDisplayString();
 
-        return new WrenClassModel(
+        return new(
             className, 
             csharpName,
             module,
@@ -60,7 +66,7 @@ public partial class WrenInterop : IIncrementalGenerator
             
             var parameters = ParseParameters(ctor.Parameters);
     
-            result.Add(new WrenConstructor(parameters));
+            result.Add(new(parameters));
         }
 
         return [..result];
@@ -105,7 +111,7 @@ public partial class WrenInterop : IIncrementalGenerator
     private static WrenProperty? ParseProperty(IPropertySymbol symbol, List<Diagnostic> diagnostics)
     {
         var attribute = symbol.GetAttributes()
-            .FirstOrDefault(a => a.AttributeClass?.Name is "WrenMethodAttribute" or "WrenMethod");
+            .FirstOrDefault(a => a.AttributeClass?.Name is "WrenPropertyAttribute" or "WrenProperty");
         
         if (attribute is null) 
             return null;
@@ -117,7 +123,7 @@ public partial class WrenInterop : IIncrementalGenerator
         var getter = symbol.GetMethod is not null;
         var setter = symbol.SetMethod is not null;
 
-        return new WrenProperty(name, type, getter, setter);
+        return new(name, type, getter, setter);
     }
 
     private static WrenMethod? ParseMethod(IMethodSymbol symbol, List<Diagnostic> diagnostics)
@@ -144,7 +150,7 @@ public partial class WrenInterop : IIncrementalGenerator
 
         var parameters = ParseParameters(symbol.Parameters);
 
-        return new WrenMethod(name, symbol.Name, symbol.IsStatic, returnType, [.. parameters]);
+        return new(name, symbol.Name, symbol.IsStatic, returnType, [.. parameters]);
     }
 
     private static List<WrenParameter> ParseParameters(ImmutableArray<IParameterSymbol> parameters)
@@ -153,7 +159,7 @@ public partial class WrenInterop : IIncrementalGenerator
         foreach (var parameter in parameters)
         {
             var csharpType = parameter.Type.ToDisplayString();
-            result.Add(new WrenParameter(parameter.Name, csharpType));    
+            result.Add(new(parameter.Name, csharpType));    
         }
 
         return result;

@@ -30,6 +30,9 @@
     <None Update="wren.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="libwren.dylib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <Import Project="..\WrenSharp.Lib.Shared\WrenSharp.Lib.Shared.projitems" Label="Shared" />

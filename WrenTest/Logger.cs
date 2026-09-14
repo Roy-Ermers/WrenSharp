@@ -1,13 +1,26 @@
-using System.Diagnostics;
 using Wren;
 
 namespace WrenTest;
 
 [WrenClass]
-public class Logger
+public partial class Logger
 {
     [WrenMethod]
     public static void Log(string message)
+    {
+        Console.Write("[WREN]: ");
+        Console.WriteLine(message);
+    }
+        
+    [WrenMethod]
+    public static void Log(double message)
+    {
+        Console.Write("[WREN]: ");
+        Console.WriteLine(message);
+    }
+    
+    [WrenMethod]
+    public static void Log(bool message)
     {
         Console.Write("[WREN]: ");
         Console.WriteLine(message);
